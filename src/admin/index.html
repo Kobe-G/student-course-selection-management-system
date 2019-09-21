@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>学生选题管理</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="css/uniform.css"/>
+    <link rel="stylesheet" href="css/select2.css"/>
+    <link rel="stylesheet" href="css/matrix-style.css"/>
+    <link rel="stylesheet" href="css/matrix-media.css"/>
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        td {
+            text-align: center !important;
+        }
+
+        .box {
+            display: none;
+        }
+    </style>
+    <script src="js/template-web.js"></script>
+    <script id="test1" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{i+1}}</td>
+            <td class="gradeX btn_row">{{data[i].titleName}}</td>
+            <td class="gradeX btn_row">{{data[i].titleID}}</td>
+            <td class="gradeX btn_row">{{data[i].titleType}}</td>
+            <td class="gradeX btn_row">{{data[i].titleSource}}</td>
+            <td class="gradeX btn_row">{{data[i].titleTool}}</td>
+            <td class="gradeX btn_row">{{data[i].tno}}</td>
+            <td>
+
+                {{if data[i].titleState==1}}
+                <button class=" btn btn-danger check" style="width: 90px">
+                    已发布
+                </button>
+                {{else}}
+                <button class=" btn btn-primary check" style="width: 90px">
+                    确认发布
+                </button>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script id="test2" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{data[i].name}}</td>
+            <td class="gradeX btn_row">{{data[i].sno}}</td>
+            <td class="gradeX btn_row">{{data[i].grade}}</td>
+            <td class="gradeX btn_row">
+                {{if data[i].titleXTS==2}}
+                已完成
+                {{else}}
+                未完成
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script id="test3" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{i+1}}</td>
+            <td class="gradeX btn_row">{{data[i].tname}}</td>
+            <td class="gradeX btn_row">{{data[i].tno}}</td>
+            <td class="gradeX btn_row">{{data[i].tpassword}}</td>
+            <td class="gradeX btn_row">{{data[i].tableType}}</td>
+            <td class="gradeX btn_row">{{data[i].zhicheng}}</td>
+            <td class="gradeX btn_row">{{data[i].jianjie}}</td>
+            <td class="gradeX btn_row">
+               <button class="btn-primary btn delete">确认删除</button>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script id="test4" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{i+1}}</td>
+            <td class="gradeX btn_row">{{data[i].sname}}</td>
+            <td class="gradeX btn_row">{{data[i].sno}}</td>
+            <td class="gradeX btn_row">{{data[i].spassword}}</td>
+            <td class="gradeX btn_row">{{data[i].tableType}}</td>
+            <td class="gradeX btn_row">{{data[i].smajor}}</td>
+            <td class="gradeX btn_row">{{data[i].sgrade}}</td>
+            <td class="gradeX btn_row">{{data[i].semail}}</td>
+            <td class="gradeX btn_row">{{data[i].sphone}}</td>
+            <td class="gradeX btn_row">{{data[i].jidian}}</td>
+            <td class="gradeX btn_row">
+               <button class="btn-primary btn delete">确认删除</button>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+</head>
+<body>
+<!--Header-part-->
+<div id="header">
+    <h1><a href="dashboard">MatAdmin</a></h1>
+	<div ><span style="color:#9c9c9c ;display:block; float: right;font-size: 20px; margin-right: 100px;" >欢迎您：<b id="welcome" style="color: #fff;"></b></span></div>
+</div>
+<div id="sidebar">
+    <a href="#" class="visible-phone"><i class="icon icon-th"></i>Tables</a>
+    <ul>
+        <!--<li class=""><a href="tables"><i class="icon icon-th"></i> <span>题目查询</span></a></li>-->
+        <li class="submenu">
+            <a href="#"><i class="icon icon-th-list"></i> <span>个人中心</span> </a>
+            <ul>
+                <li class="showOrHidden" value="0"><a href="javascript:void(0)">重置密码</a></li>
+            </ul>
+        </li>
+        <li class="submenu">
+            <a href="#"><i class="icon icon-group"></i> <span>用户管理</span> </a>
+            <ul>
+                <li class="showOrHidden" value="1"><a href="javascript:void(0)">老师管理</a></li>
+                <li class="showOrHidden" value="2"><a href="javascript:void(0)">学生管理</a></li>
+            </ul>
+        </li>
+        <li class="submenu">
+            <a href="#"><i class="icon icon-group"></i> <span>选题管理</span> </a>
+            <ul style="display: block">
+                <li class="active showOrHidden" value="3"><a href="javascript:void(0)">确认发布选题</a></li>
+                <li class="showOrHidden" value="4"><a href="javascript:void(0)">查看完成选课名单</a></li>
+            </ul>
+        </li>
+        <li class="submenu">
+            <a href="#"><i class="icon icon-tasks"></i> <span>统计</span> </a>
+            <ul>
+                <li class="showOrHidden" value="5"><a href="javascript:void(0)">查看选题进度</a></li>
+            </ul>
+        </li>
+		<li class="submenu">
+			<a href="javascript:void(0)"><i class="icon icon-th-list"></i> <span>注销</span> </a>
+		<ul>
+			<li class="" value="1"><a href="../login.html">注销</a></li>
+		
+		</ul>
+		</li>
+    </ul>
+</div>
+
+
+<!--重置密码-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">重置密码</a></div>
+        <h2  style="padding-left: 50px">重置密码</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span4" style="margin-left:120px;width:800px">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>重置密码</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="#" method="get" class="form-horizontal" disabled="true">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label">请输入账号:</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="请输入账号" id="username"/>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">请输入账号类型:</label>
+                                        <div class="controls">
+                                            <input type="text" class="span11" placeholder="学生账号类型为0,老师账号类型为1"
+                                                   id="type"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-actions" style="text-align: center;">
+                                <button type="button" class="btn btn-success" id="resetPassword">确定重置</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--老师管理-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">老师管理</a></div>
+        <h2  style="padding-left: 50px">老师管理</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                            <div>
+                                <span style="font-size:16px">基本信息输入</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <button type="button" class="btn margin_top btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal" style="float:right">添加信息
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="123"><span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">添加老师信息</h4>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="widget-box">
+
+
+                                                        <form action="#" method="get" class="form-horizontal"
+                                                              disabled="true">
+                                                            <fieldset>
+                                                                <div class="control-group">
+                                                                    <label class="control-label">老师姓名:</label>
+                                                                    <div class="controls">
+                                                                        <input type="text" class="span11"
+                                                                               placeholder="可输入部分"
+                                                                               id="teaName"/>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="control-group">
+                                                                    <label class="control-label">工号 :</label>
+                                                                    <div class="controls">
+                                                                        <input type="text" class="span11"
+                                                                               placeholder="可输入部分"
+                                                                               id="teacherId"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="control-group">
+                                                                    <label class="control-label">密码 :</label>
+                                                                    <div class="controls">
+                                                                        <input type="password" class="span11"
+                                                                               placeholder="可输入部分"
+                                                                               id="teaPassword"/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="control-group">
+                                                                    <label class="control-label">职称 :</label>
+                                                                    <div class="controls">
+                                                                        <input type="text" class="span11"
+                                                                               placeholder="可输入部分"
+                                                                               id="teaZC"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="control-group">
+                                                                    <label class="control-label">简介 :</label>
+                                                                    <div class="controls">
+                                                                        <input type="text" class="span11"
+                                                                               placeholder="可输入部分"
+                                                                               id="teaJJ"/>
+                                                                    </div>
+                                                                </div>    
+                                                            </fieldset>
+                                                        </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button style="align-items: center;" type="button" class="btn btn-primary" data-dismiss="modal" id="teaAdd">
+                                                    确认添加
+                                                </button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="example">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>姓名</th>
+                                            <th>工号</th>
+                                            <th>密码</th>
+                                            <th>账号类型</th>
+                                            <th>职称</th>
+                                            <th>简介</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example3">
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--学生管理:添加学生-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">学生管理</a></div>
+        <h2  style="padding-left: 50px">学生管理</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                            <div>
+                                <span style="font-size:16px">基本信息输入</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <button type="button" class="btn margin_top btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal1" style="float:right">添加信息
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+                                     aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">添加学生信息</h4>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="widget-box">
+
+
+                                                    <form action="#" method="get" class="form-horizontal"
+                                                          disabled="true">
+                                                        <fieldset>
+                                                            <div class="control-group">
+                                                                <label class="control-label">姓名:</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="stuName"/>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">学号 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="stuId"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">密码 :</label>
+                                                                <div class="controls">
+                                                                    <input type="password" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="stuPassword"/>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="control-group">
+                                                                <label class="control-label">专业 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="major"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">年级 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="grade"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">邮箱 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分" id="email"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">电话 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分" id="tell"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="control-group">
+                                                                <label class="control-label">绩点 :</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="span11"
+                                                                           placeholder="可输入部分"
+                                                                           id="jidian"/>
+                                                                </div>
+                                                            </div>
+
+                                                        </fieldset>
+                                                    </form>
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="stuAdd">
+                                                    确认添加
+                                                </button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="example">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>姓名</th>
+                                            <th>学号</th>
+                                            <th>密码</th>
+                                            <th>账号类型</th>
+                                            <th>专业</th>
+                                            <th>年级</th>
+                                            <th>邮箱</th>
+                                            <th>电话</th>
+                                            <th>绩点</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example4">
+                                        <tr class="gradeX btn_row">
+                                            <td>
+                                                <div class="checker" id="uniform-undefined">
+                                                    <span class=""><input type="checkbox" style="opacity: 0;"></span>
+                                                </div>
+                                            </td>
+                                            <td>1</td>
+                                            <td>张三</td>
+                                            <td>001</td>
+                                            <td>zhangsan001</td>
+                                            <td>数字媒体技术</td>
+                                            <td>三年级</td>
+                                            <td>867080855@qq.com</td>
+                                            <td>15214204802</td>
+                                            <td>99.9</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--确认发布选题-->
+<div class="content box" style="display: block">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">确认选题</a></div>
+        <h2  style="padding-left: 50px">确认选题</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                            <div>
+                                <span>开始时间：</span><input type="text" placeholder=请输入开始时间 class="span2 m-wrap">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span>结束时间：</span><input type="text" placeholder="请输入结束时间" class="span2 m-wrap">
+                                <button class="margin_top btn btn-warning" style="margin-top: -8px">确认发布</button>
+                            </div>
+
+
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+
+                            </div>
+
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>题目名称</th>
+                                            <th>题目编号</th>
+                                            <th>题目类型</th>
+                                            <th>题目来源</th>
+                                            <th>开发工具</th>
+                                            <th>老师工号</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example1">
+                                        <!--<tr class="gradeX btn_row">-->
+                                        <!--<td>1</td>-->
+                                        <!--<td>Trident</td>-->
+                                        <!--<td> Internet-->
+                                        <!--Explorer 4.0-->
+                                        <!--</td>-->
+                                        <!--<td>Win 95+</td>-->
+                                        <!--<td>4</td>-->
+                                        <!--<td>111</td>-->
+                                        <!--<td>222</td>-->
+                                        <!--<td>-->
+                                        <!--<button class="btn btn-primary check" style="width: 90px">确认发布</button>-->
+                                        <!--</td>-->
+                                        <!--</tr>-->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--完成选课的名单-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">完成选课名单</a></div>
+        <h2  style="padding-left: 50px">完成选课名单</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+			
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div id="container" style="height: 100%">123</div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+									    <button type="button" class="btn margin_top btn-primary btn-lg" style="float:right" id="daochu">导出选课信息</button>
+                                </div>
+								
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="example6">
+                                        <thead>
+                                        <tr>
+
+                                            <th>姓名</th>
+                                            <th>学号</th>
+                                            <th>届数</th>
+                                            <th>是否完成</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example2">
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--查看选题进度-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">查看选题进度</a></div>
+        <h2  style="padding-left: 50px">查看选题进度</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                            <div>
+                                <span id="allNubmer" style="font-size:16px">总人数</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span id="subjectNubmer" style="font-size:16px;margin-left:100px">总题目数</span>
+
+                            </div>
+
+
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+								
+                            </div>
+
+                            <div class="widget-box">
+								
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="example">
+                                        <thead>
+                                        <tr>
+                                            <th>老师姓名</th>
+                                            <th>人数进度</th>
+                                            <th>题目进度</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="gradeX btn_row row_padding">
+                                            <td>
+                                                张老师
+                                            </td>
+                                            <td>
+                                                <div class="progress progress-success progress-striped ">
+                                                    <div style="width: 50%;" class="bar"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="progress progress-success progress-striped ">
+                                                    <div style="width: 50%;" class="bar"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.ui.custom.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.uniform.js"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/matrix.js"></script>
+<script src="js/jquery.table2excel.js"></script>
+<script type="text/javascript">
+    //点击切换显示或隐藏
+  var showOrHidden = $(".showOrHidden");
+    showOrHidden.click(
+        function () {
+            $(".box").hide();
+            $($(".box")[this.value]).show();
+            showOrHidden.removeClass("active");
+            $(this).addClass("active");
+        }
+    );
+
+
+    //显示用户信息
+    var url = location.href;
+    var re1 = new RegExp('(\\?|&)?number=([^&]*)');
+    var re2 = new RegExp('(\\?|&)?TableType=([^&]*)');
+    $.ajax({
+        url: "http://172.20.10.4:8080/Web/show_user",
+        data: {"UID": re1.exec(url)[2]},
+        type: "GET",
+        success: function (data) {
+            $("#welcome").append(data[0].uname);
+        },
+        error: function () {
+
+        }
+    });
+
+    //获取选题进度
+    $.ajax({
+        url: "http://172.20.10.4:8080/Web/process_xt",
+        type: "GET",
+        success: function (data) {
+            $(".progress-success").children().width(data[0].complete*100/data[0].unfinished+"%");
+        },
+        error: function () {
+
+        }
+    });
+
+    //获取数据确认发布
+    function xrConfirm() {
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/admin_showTitle",
+            type: "GET",
+            success: function (data) {
+                var html = template("test1", {data: data});
+                $("#example1").html(html);
+                //点击选择或取消按钮实现选题功能
+                $(".check").click(
+                    function () {
+                        if (this.innerText === "确认发布") {
+                            $.ajax({
+                                url: "http://172.20.10.4:8080/Web/admin_confirm_xt",
+                                type: "GET",
+                                data: {"TitleID": $(this).parent().parent().children()[2].innerText},
+                                success: function (data) {
+                                    alert(data[0].msg);
+                                    xrConfirm();
+                                },
+                                error: function () {
+
+                                }
+                            });
+                        }
+                        else {
+                            alert("已发布");
+                        }
+                    }
+                );
+            },
+            error: function () {
+
+            }
+        })
+    }
+    xrConfirm();
+
+
+
+    //获取老师管理数据
+    function xrTea() {
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/TeaInfo",
+            type: "GET",
+            success: function (data) {
+                var html = template("test3", {data: data});
+                $("#example3").html(html);
+                //点击选择或取消按钮实现选题功能
+                $(".delete").click(
+                    function () {
+                            $.ajax({
+                                url: "http://172.20.10.4:8080/Web/Delete_data",
+                                type: "GET",
+                                data: {"Number": $(this).parent().parent().children()[2].innerText,"TableType":$(this).parent().parent().children()[4].innerText},
+                                success: function (data) {
+                                    alert(data[0].msg);
+                                    xrTea();
+                                },
+                                error: function () {
+
+                                }
+                            });
+                        }
+
+                );
+            },
+            error: function () {
+
+            }
+        })
+    }
+    xrTea();
+
+
+    //获取学生管理数据
+    function xrStu() {
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/StuInfo",
+            type: "GET",
+            success: function (data) {
+                var html = template("test4", {data: data});
+                $("#example4").html(html);
+                //点击选择或取消按钮实现选题功能
+                $(".delete").click(
+                    function () {
+                        $.ajax({
+                            url: "http://172.20.10.4:8080/Web/Delete_data",
+                            type: "GET",
+                            data: {"Number": $(this).parent().parent().children()[2].innerText,"TableType":$(this).parent().parent().children()[4].innerText},
+                            success: function (data) {
+                                console.log(data);
+                                alert(data[0].msg);
+                                xrStu();
+                            },
+                            error: function () {
+
+                            }
+                        });
+                    }
+
+                );
+            },
+            error: function () {
+
+            }
+        })
+    }
+    xrStu();
+
+    //点击按钮重置账号密码
+    $("#resetPassword").click(function () {
+        var TableType = $("#type").val();
+        var Number = $("#username").val();
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/Reset_Pwd",
+            type: "GET",
+            data: {"TableType": TableType, "Number": Number},
+            success: function (data) {
+                alert(data[0].msg + "密码已重置为123456");
+            },
+            error: function () {
+
+            }
+        })
+    })
+
+
+
+
+    //获取完成和未完成选课的名单
+    $.ajax({
+        url: "http://172.20.10.4:8080/Web/List_unfinished",
+        type: "GET",
+        success: function (data) {
+            var html = template("test2", {data: data});
+            $("#example2").html(html);
+        },
+        error: function () {
+
+        }
+    });
+
+	//添加老师信息
+	$("#teaAdd").click(function(){
+		$.ajax({
+			
+		    url: "http://172.20.10.4:8080/Web/Insert_tea",
+		    type: "GET",
+			data:{"Tname":encodeURI($("#teaName").val()),"Tno":$("#teacherId").val(),"Tpassword":$("#teaPassword").val(),"Zhicheng":encodeURI($("#teaZC").val()),"Jianjie":encodeURI($("#teaJJ").val())},
+		    success: function (data) {
+				alert(data[0].msg);
+		    },
+		    error: function () {
+		
+		    }
+		});
+	});
+
+
+	//添加学生信息
+	$("#stuAdd").click(function(){
+		$.ajax({
+		    url: "http://172.20.10.4:8080/Web/Insert_stu",
+		    type: "post",
+			data:{"Sname":encodeURI($("#stuName").val()),"Sno":$("#stuId").val(),"Spassword":$("#stuPassword").val(),
+			"Smajor":encodeURI($("#major").val()),"Semail":encodeURI($("#email").val()),"Sgrade":encodeURI($("#grade").val()),
+			"Sphone":encodeURI($("#tell").val()),"Jidian":encodeURI($("#jidian").val())},
+		    success: function (data) {
+				alert(data[0].msg);
+		    },
+		    error: function () {
+		
+		    }
+		});
+	});
+	
+
+
+	
+	//导出选课信息	
+	 $("#daochu").click(function () {
+	  $("#example6").table2excel({
+	    exclude : ".noExl", //过滤位置的 css 类名
+	    filename : "选课信息" + new Date().getTime() + ".xls", //文件名称
+	    name: "Excel Document Name.xlsx",
+	    exclude_img: true,
+	    exclude_links: true,
+	    exclude_inputs: true
+	  });
+	});
+	
+
+
+	
+</script>
+
+</body>
+</html>

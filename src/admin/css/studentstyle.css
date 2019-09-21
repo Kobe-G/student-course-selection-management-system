@@ -1,0 +1,14 @@
+.margin_top{
+	margin-top:-8px;
+	margin-left:40px;
+}
+#header h2{
+	padding-left:50px;
+	padding-top:20px;
+}
+.row_padding td{
+	padding:0;
+	padding-top:20px;
+	text-align: center;
+}
+table td 

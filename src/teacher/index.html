@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>老师选题管理</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css"/>
+    <link rel="stylesheet" href="css/uniform.css"/>
+    <link rel="stylesheet" href="css/select2.css"/>
+    <link rel="stylesheet" href="css/matrix-style.css"/>
+
+    <link rel="stylesheet" href="css/matrix-media.css"/>
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        textarea#addmessage {
+            height: 80px;
+        }
+
+        .box {
+            display: none;
+        }
+
+        td {
+            text-align: center !important;
+        }
+    </style>
+    <script id="test1" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{i+1}}</td>
+            <td class="gradeX btn_row"><input type="text" value="{{data[i].titleName}}"></td>
+            <td class="gradeX btn_row"><input type="text" value="{{data[i].titleID}}" disabled="disabled"></td>
+            <td class="gradeX btn_row"><input type="text" value="{{data[i].titleSource}}"></td>
+            <td class="gradeX btn_row"><input type="text" value="{{data[i].titleTool}}"></td>
+            <td>
+                {{if data[i].titleXTS==2}}
+                <button class=" btn btn-danger reWrite" style="width: 140px">
+                    无法修改
+                </button>
+                {{else}}
+                <button class=" btn btn-primary reWrite" style="width: 140px">
+                    修改选题信息
+                </button>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script id="test2" type="text/artTemplate">
+        {{each data as value i}}
+        <tr>
+            <td class="gradeX btn_row">{{i+1}}</td>
+            <td class="gradeX btn_row">{{data[i].titleName}}</td>
+            <td class="gradeX btn_row">{{data[i].titleID}}</td>
+            <td class="gradeX btn_row">{{data[i].sno}}</td>
+            <td class="gradeX btn_row">{{data[i].name}}</td>
+            <td>
+
+                    {{if data[i].titleXTS==2}}
+                    <button class=" btn btn-danger check" style="width: 90px">
+                    已审核
+                    </button>
+                    {{else}}
+                    <button class=" btn btn-primary check" style="width: 90px">
+                        审核
+                    </button>
+                    {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script src="js/template-web.js"></script>
+</head>
+<body>
+<!--Header-part-->
+<div id="header">
+    <h1>logo</h1>
+	<div ><span style="color:#9c9c9c ;display:block; float: right;font-size: 20px; margin-right: 100px;" >欢迎您：<b id="welcome" style="color: #fff;"></b></span></div>
+</div>
+<div id="sidebar">
+    <a href="#" class="visible-phone"><i class="icon icon-th"></i>Tables</a>
+    <ul>
+        <!--<li class=""><a href="tables"><i class="icon icon-th"></i> <span>题目查询</span></a></li>-->
+        <li class="submenu">
+            <a href="#"><i class="icon icon-th-list"></i> <span>个人中心</span> </a>
+            <ul>
+                <li class="showOrHidden" value="0"><a href="javascript:void(0)">修改密码</a></li>
+                <li class="showOrHidden" value="1"><a href="javascript:void(0)">查看个人信息</a></li>
+            </ul>
+        </li>
+        <li class="submenu open">
+            <a href="#"><i class="icon icon-group"></i> <span>题目管理</span> </a>
+            <ul>
+                <li class="showOrHidden" value="2"><a href="javascript:void(0)">题目增加</a></li>
+                <li class="showOrHidden" value="3"><a href="javascript:void(0)">题目维护</a></li>
+                <li class="showOrHidden active" value="4"><a href="javascript:void(0)">选题管理</a></li>
+            </ul>
+        </li>
+		<li class="submenu">
+			<a href="javascript:void(0)"><i class="icon icon-th-list"></i> <span>注销</span> </a>
+		<ul>
+			<li class="" value="1"><a href="../login.html">注销</a></li>
+		
+		</ul>
+		</li>
+    </ul>
+</div>
+
+
+<!--修改密码-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">修改密码</a></div>
+        <h2 style="padding-left: 50px">修改密码</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span4" style="margin-left:120px;width:800px">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>信息查看</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="#" method="get" class="form-horizontal" disabled="true">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label">请输入新密码:</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="请输入新密码" id="newPwd"/>
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">请再次输入新密码 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="请再次输入新密码" id="renewPwd"/>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+
+                            <div class="form-actions" style="text-align: center;">
+                                <button type="button" class="btn btn-success" id="pwdBtn">确认</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--查看个人信息-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">个人信息</a></div>
+        <h2 style="padding-left: 50px">个人信息</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span4" style="margin-left:120px;width:800px">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>信息查看</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="#" method="get" class="form-horizontal" disabled="true">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label">姓名:</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="name"
+                                               disabled="disabled"/>
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">工号 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="Tno"
+                                               disabled="disabled"/>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">职称 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="Zhicheng"
+                                               disabled="disabled"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">简介 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="Jianjie"/>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+
+                            <div class="form-actions" style="text-align: center;">
+
+                                <button type="button" class="btn btn-success" id="teaBtn">提交修改</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--题目增加-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">题目增加</a></div>
+        <h2 style="padding-left: 50px">题目增加</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span4" style="margin-left:120px;width:800px">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"> <i class="icon-align-justify"></i> </span>
+                        <h5>题目上传</h5>
+                    </div>
+                    <div class="widget-content nopadding">
+                        <form action="#" method="get" class="form-horizontal">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label">题目名:</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="TitleName"/>
+                                    </div>
+
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">题目编号 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="TitleID"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">题目类型 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="TitleType"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">题目来源 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="TitleSource"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">开发工具 :</label>
+                                    <div class="controls">
+                                        <input type="text" class="span11" placeholder="可输入部分" id="TitleTool"/>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">题目内容 :</label>
+                                    <div class="controls">
+                                        <textarea class="span11" name="text" cols="30" rows="10"
+                                                  id="TitleText"></textarea>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+
+                            <div class="form-actions" style="text-align: center;">
+                                <button type="button" class="btn btn-success" id="addBtn">确认提交</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--题目维护-->
+<div class="content box">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">维护选题</a></div>
+        <h2  style="padding-left: 50px">维护选题</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                            <div>
+                                <span>届数：</span><input type="text" placeholder=请输入届数 class="span2 m-wrap">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span>请输入题目编号：</span><input type="text" placeholder="请输入题目编号" class="span2 m-wrap">
+                                <button class="margin_top btn btn-warning">查询</button>
+                            </div>
+
+
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+
+                            </div>
+
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="example">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>题目名称</th>
+                                            <th>题目编号</th>
+                                            <th>题目来源</th>
+                                            <th>开发工具</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example1">
+                                        <!--<tr class="gradeX btn_row">-->
+                                        <!--<td>1</td>-->
+                                        <!--<td>Trident</td>-->
+                                        <!--<td> Internet-->
+                                        <!--Explorer 4.0-->
+                                        <!--</td>-->
+                                        <!--<td>Win 95+</td>-->
+                                        <!--<td class="center">4</td>-->
+                                        <!--<td>-->
+                                        <!--<button class=" btn btn-primary">确认选择</button>-->
+                                        <!--<button class=" btn btn-warning">取消选择</button>-->
+                                        <!--</td>-->
+                                        <!--</tr>-->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--选题管理-->
+<div class="content box" style="display: block">
+    <div id="content-header">
+        <div id="breadcrumb"><a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a
+                href="#" class="current">老师选题管理</a></div>
+        <h2 style="padding-left: 50px">学生选题管理</h2>
+    </div>
+    <div class="container-fluid">
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-content">
+                        <div class="controls">
+                        </div>
+                        <div class="widget-content nopadding">
+                            <div class="widget-box">
+
+                            </div>
+
+                            <div class="widget-box">
+                                <div class="widget-title"><span class="icon"><i class="icon-th"></i></span>
+                                    <h5>Data table</h5>
+                                </div>
+                                <div class="widget-content nopadding">
+                                    <table class="table table-bordered data-table" id="">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>题目名称</th>
+                                            <th>题目编号</th>
+                                            <th>学生学号</th>
+                                            <th>学生姓名</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="example2">
+                                        <!--<tr class="gradeX btn_row">-->
+                                            <!--<td>Trident</td>-->
+                                            <!--<td> Internet-->
+                                                <!--Explorer 4.0-->
+                                            <!--</td>-->
+                                            <!--<td>Win 95+</td>-->
+                                            <!--<td class="center">4</td>-->
+                                            <!--<td>-->
+                                                <!--<button class=" btn btn-warning">审核</button>-->
+                                                <!--<button class=" btn btn-warning">打回</button>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.ui.custom.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.uniform.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
+<script src="js/matrix.js"></script>
+<script type="text/javascript">
+
+    //点击切换显示或隐藏
+    var showOrHidden = $(".showOrHidden");
+    showOrHidden.click(
+        function () {
+            $(".box").hide();
+            $($(".box")[this.value]).show();
+            showOrHidden.removeClass("active");
+            $(this).addClass("active");
+        }
+    );
+
+    //向后端传值得到老师的数据
+    var URL = location.href;
+    var re1 = new RegExp('(\\?|&)?number=([^&]*)');
+    var re2 = new RegExp('(\\?|&)?TableType=([^&]*)');
+    $.ajax({
+        url: "http://172.20.10.4:8080/Web/Look_pers",
+        data: {"number": re1.exec(URL)[2], "TableType": re2.exec(URL)[2]},
+        type: "GET",
+        success: function (data) {
+            $("#name").val(data[0].tname);
+            $("#Tno").val(data[0].tno);
+            $("#Zhicheng").val(data[0].zhicheng);
+            $("#Jianjie").val(data[0].jianjie);
+        },
+        error: function () {
+
+        }
+    });
+
+    //点击按钮提交修改密码
+    $("#pwdBtn").click(function () {
+        if ($("#newPwd").val() === $("#renewPwd").val()) {
+            alert($("#Tno").val());
+            $.ajax({
+                url: "http://172.20.10.4:8080/Web/Rset_tea",
+                data: {"Tno": $("#Tno").val(), "password": $("#newPwd").val()},
+                type: "GET",
+                success: function (data) {
+                    alert("操作成功！");
+                },
+                error: function () {
+                    alert("修改失败，请稍后重试");
+                }
+            });
+        }
+        else {
+            alert("两次输入密码不一致");
+        }
+    });
+
+    //点击按钮修改个人信息
+    $("#teaBtn").click(function () {
+
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/Update_tea",
+            data: {"Tno": $("#Tno").val(), "Jianjie": $("#Jianjie").val()},
+            type: "GET",
+            success: function (data) {
+                alert("操作成功！");
+            },
+            error: function () {
+                alert("修改失败，请稍后重试");
+            }
+        });
+    });
+
+    //添加题目
+    $("#addBtn").click(function () {
+
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/Add_title",
+            data: {
+                "TitleName": encodeURI($("#TitleName").val()),
+                "TitleID": encodeURI($("#TitleID").val()),
+                "TitleType": encodeURI($("#TitleType").val()),
+                "TitleSource": encodeURI($("#TitleSource").val()),
+                "TitleTool": encodeURI($("#TitleTool").val()),
+                "TitleText": encodeURI($("#TitleTex").val()),
+                "Tno": encodeURI($("#Tno").val())
+            },
+            type: "GET",
+            success: function (data) {
+                alert("操作成功！");
+            },
+            error: function () {
+                alert("修改失败，请稍后重试");
+            }
+        });
+    });
+
+
+    //显示选题的数据
+    function xrOptionTitle() {
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/stu_show",
+            type: "GET",
+            success: function (data) {
+                var html = template("test1", {data: data});
+                $("#example1").html(html);
+
+                //点击按钮实现修改题目信息
+                $(".reWrite").click(
+                    function () {
+                        if (this.innerText === "修改选题信息") {
+
+                            $.ajax({
+                                url: "http://172.20.10.4:8080/Web/Protect_title",
+                                type: "GET",
+                                data: {
+                                    "TitleID": $(this).parent().parent().children().children()[1].value,
+                                    "TitleSource": encodeURI($(this).parent().parent().children().children()[2].value),
+                                    "TitleTool": encodeURI($(this).parent().parent().children().children()[3].value),
+                                    "TitleName": encodeURI($(this).parent().parent().children().children()[0].value)
+                                },
+                                success: function (data) {
+                                    alert(data[0].msg);
+                                    xrOptionTitle();
+                                },
+                                error: function () {
+
+                                }
+                            })
+                        }
+                        else {
+                            alert("学生已经选择改题目，无法修改！");
+                        }
+
+                    }
+                );
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+    xrOptionTitle();
+
+
+    //获取审批或打回的选题表
+    function  xrData() {
+        $.ajax({
+            url: "http://172.20.10.4:8080/Web/tea_show_stu",
+            type: "GET",
+            success: function (data) {
+                var html = template("test2", {data: data});
+                $("#example2").html(html);
+                //点击按钮实现修改题目信息
+                $(".check").click(
+                    function () {
+                        if (this.innerText === "审核") {
+                            $.ajax({
+                                url: "http://172.20.10.4:8080/Web/tea_confirm",
+                                type: "GET",
+                                data: {"TitleID": $(this).parent().parent().children()[2].innerText},
+                                success: function (data) {
+                                    alert(data[0].msg);
+                                    xrData();
+                                },
+                                error: function () {
+
+                                }
+                            })
+                        }
+                        else {
+                            alert("已审核");
+                        }
+
+                    }
+                );
+
+            },
+            error: function () {
+
+            }
+        });
+        
+    }
+    xrData();
+	
+	//获得用户信息并显示
+	var URL = location.href;
+	var re1 = new RegExp('(\\?|&)?number=([^&]*)');
+	var re2 = new RegExp('(\\?|&)?TableType=([^&]*)');
+	$.ajax({
+	    url: "http://172.20.10.4:8080/Web/show_user",
+	    data: {"UID": re1.exec(URL)[2]},
+	    type: "GET",
+	    success: function (data) {
+	       $("#welcome").append(data[0].uname);
+	    },
+	    error: function () {
+	
+	    }
+	});
+	
+</script>
+
+</body>
+</html>
